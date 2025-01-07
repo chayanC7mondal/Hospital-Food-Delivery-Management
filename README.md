@@ -3,10 +3,10 @@
 ### Database Diagram :
 
 <p align="center">
-  <img src="Hospital-FoodManagement-System.png" alt="Database Diagram" width="400" />
+  <img src="Hospital-FoodManagement-System.png" alt="Database Diagram" width="700" />
 </p>
 
 <p align="center">
-  <img src="eraser-dbdiagram.png" alt="Database Diagram" width="400" />
+  <img src="eraser-dbdiagram.png" alt="Database Diagram" width="700" />
 </p>
 
