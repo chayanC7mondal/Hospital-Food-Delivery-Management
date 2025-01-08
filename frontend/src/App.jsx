@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/Login"; // Import the Login component
 
-function App() {
+const App = () => {
   return (
-    <>
-      <div>hello world</div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/LoginPage" element={<Login />} />
+        {/* Other routes */}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
