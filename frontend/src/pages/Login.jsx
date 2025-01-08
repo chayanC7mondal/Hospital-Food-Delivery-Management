@@ -8,10 +8,9 @@ import {
   Box,
   Typography,
   Backdrop,
+  IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { LightPurpleButton } from "../components/buttonstyles";
-import bgpic from "../assets/designlogin.jpg";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -32,10 +31,9 @@ const LoginPage = () => {
       return;
     }
 
-    // Simulate login process
     setLoader(true);
     setTimeout(() => {
-      navigate("/dashboard"); // Redirect to dashboard after successful login
+      navigate("/dashboard");
       setLoader(false);
     }, 2000);
   };
@@ -47,107 +45,145 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Grid
-        container
-        component="main"
-        className="w-full max-w-md bg-white shadow-xl rounded-lg p-8"
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* Left Side - Login Form */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          padding: "0 4rem",
+          backgroundColor: "#f9f9f9",
+        }}
       >
-        <Box className="flex flex-col items-center w-full">
-          <Typography
-            variant="h4"
-            className="mb-4 text-2xl font-bold text-indigo-600"
-          >
-            Login
-          </Typography>
-          <Typography variant="h6" className="mb-6 text-gray-500">
-            Please enter your email and password
-          </Typography>
+        <Typography variant="h4" fontWeight="bold" mb={1}>
+          Food Manager Login
+        </Typography>
+        <Typography variant="body1" mb={4}>
+          Welcome back! Please enter your details
+        </Typography>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Enter your email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            error={emailError}
+            helperText={emailError && "Email is required"}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type={toggle ? "text" : "password"}
+            id="password"
+            autoComplete="current-password"
+            error={passwordError}
+            helperText={passwordError && "Password is required"}
+            onChange={handleInputChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={() => setToggle(!toggle)}>
+                  {toggle ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
           <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            className="w-full"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              my: 2,
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              error={emailError}
-              helperText={emailError && "Email is required"}
-              onChange={handleInputChange}
-              className="mb-4"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type={toggle ? "text" : "password"}
-              id="password"
-              autoComplete="current-password"
-              error={passwordError}
-              helperText={passwordError && "Password is required"}
-              onChange={handleInputChange}
-              className="mb-4"
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={() => setToggle(!toggle)}>
-                    {toggle ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                ),
-              }}
-            />
-            <div className="flex justify-between items-center mb-4">
-              <label className="inline-flex items-center text-sm text-gray-600">
-                <input type="checkbox" className="form-checkbox" />
-                <span className="ml-2">Remember me</span>
-              </label>
-              <a
-                href="#"
-                className="text-sm text-indigo-600 hover:text-indigo-800"
-              >
-                Forgot password?
-              </a>
-            </div>
-            <LightPurpleButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              className="mb-4 py-2"
-            >
-              {loader ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Login"
-              )}
-            </LightPurpleButton>
-            <Button
-              fullWidth
-              variant="outlined"
-              className="text-indigo-600 border-indigo-600 mb-6 py-2"
-            >
-              Login as Guest
-            </Button>
+            <label>
+              <input type="checkbox" style={{ marginRight: "8px" }} />
+              Remember me
+            </label>
+            <a href="#" style={{ textDecoration: "none", color: "#7b61ff" }}>
+              Forgot password?
+            </a>
           </Box>
-        </Box>
-      </Grid>
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgpic})` }}
-      ></div>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              backgroundColor: "#7b61ff",
+              color: "#fff",
+              mb: 2,
+              "&:hover": { backgroundColor: "#6b52e2" },
+            }}
+          >
+            {loader ? (
+              <CircularProgress size={24} sx={{ color: "#fff" }} />
+            ) : (
+              "Login"
+            )}
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              color: "#7b61ff",
+              borderColor: "#7b61ff",
+              mb: 3,
+              "&:hover": { borderColor: "#6b52e2", color: "#6b52e2" },
+            }}
+          >
+            Login as Guest
+          </Button>
+        </form>
+        <Typography variant="body2">
+          Don’t have an account?{" "}
+          <a
+            href="#"
+            style={{
+              textDecoration: "none",
+              color: "#7b61ff",
+              fontWeight: "bold",
+            }}
+          >
+            Sign up
+          </a>
+        </Typography>
+      </Box>
+      {/* Right Side - Decorative Element */}
+      <Box
+        sx={{
+          flex: 1,
+          backgroundColor: "#f4f4f4",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            width: "200px",
+            height: "200px",
+            borderRadius: "50%",
+            backgroundColor: "#7b61ff",
+            boxShadow: "0 10px 20px rgba(123, 97, 255, 0.4)",
+          }}
+        ></div>
+      </Box>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}
       >
-        <CircularProgress color="primary" />
-        Please Wait
+        <CircularProgress color="inherit" />
       </Backdrop>
     </div>
   );
