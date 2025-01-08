@@ -1,7 +1,8 @@
-import { Snackbar } from "@mui/material";
+import * as React from "react";
 import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
 
-const Popup = ({ message, setShowPopup, showPopup }) => {
+const Popup = ({ message, showPopup, setShowPopup }) => {
   const vertical = "top";
   const horizontal = "right";
 
@@ -21,20 +22,20 @@ const Popup = ({ message, setShowPopup, showPopup }) => {
       key={vertical + horizontal}
     >
       {message === "Done Successfully" ? (
-        <MuiAlert
-          onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
           {message}
-        </MuiAlert>
+        </Alert>
       ) : (
-        <MuiAlert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
           {message}
-        </MuiAlert>
+        </Alert>
       )}
     </Snackbar>
   );
 };
 
 export default Popup;
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
