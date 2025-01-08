@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import HospitalImage from "../assets/homepage3.jpg"; // Import the image file
-import LoginPage from "./Login";
+// import LoginPage from "./Login";
+import ChooseRole from "./ChooseRole";
 
 const HomePage = () => {
   return (
@@ -34,7 +35,7 @@ const HomePage = () => {
 
         <div className="flex flex-col items-center gap-4 mt-8 w-full">
           {/* Login Button */}
-          <Link to="/LoginPage" className="w-full">
+          <Link to="/ChooseRole" className="w-full">
             <button className="w-full mt-4 py-2 px-4 border border-[#7f56da] text-[#7f56da] rounded-full hover:bg-[#7f56da] hover:text-white transition-all">
               Login
             </button>
