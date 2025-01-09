@@ -1,7 +1,9 @@
+// signup.routes.js
 const express = require("express");
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
+router.post("/", async (req, res) => {
+  // Ensure route is "/" because it's prefixed with "/api/signup" in server.js
   try {
     const { name, email, password } = req.body;
 
@@ -10,8 +12,7 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Simulate database interaction
-    // Replace with actual DB logic (e.g., using Prisma or Mongoose)
+    // Simulate DB interaction or replace with actual DB logic
     console.log(`Registering user: ${name}, ${email}`);
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {

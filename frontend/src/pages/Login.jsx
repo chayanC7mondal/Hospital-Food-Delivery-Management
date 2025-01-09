@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Button,
   CircularProgress,
@@ -10,79 +10,48 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from "axios";
-import process from "process";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = location.state?.role || "User"; // Default role
+  const role = location.state?.role || "User"; // Default to "User" if no role is passed
 
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false); // For showing/hiding password
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const email = event.target.email?.value;
     const password = event.target.password?.value;
 
-    let hasError = false;
-    if (!email || !validateEmail(email)) {
-      setEmailError(true);
-      hasError = true;
-    }
-    if (!password) {
-      setPasswordError(true);
-      hasError = true;
+    // Validate input
+    if (!email || !password) {
+      if (!email) setEmailError(true);
+      if (!password) setPasswordError(true);
+      return;
     }
 
-    if (hasError) return;
-
+    // Simulate loader and redirect to role-specific dashboard
     setLoader(true);
-    setErrorMessage("");
+    setTimeout(() => {
+      setLoader(false); // Hide the loader after 2 seconds
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/login`,
-        { email, password }
-      );
-
-      const { role: userRole, token } = response.data;
-      localStorage.setItem("authToken", token);
-
-      switch (userRole) {
-        case "Food Manager":
-          navigate("/AdminDashboard/AdminHomepage");
-          break;
-        case "Inner Pantry":
-          navigate("/PantryDashboard/PantryHome");
-          break;
-        case "Delivery Personnel":
-          navigate("/DeliveryDashboard/DeliveryHome");
-          break;
-        default:
-          navigate("/");
-      }
-    } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-    } finally {
-      setLoader(false);
-    }
+      // Redirect based on role
+      if (role === "Food Manager") navigate("/AdminDashboard/AdminHomepage");
+      else if (role === "Inner Pantry") navigate("/PantryDashboard/PantryHome");
+      else if (role === "Delivery Personnel")
+        navigate("/DeliveryDashboard/DeliveryHome");
+      else navigate("/"); // Fallback
+    }, 2000);
   };
 
   const handleInputChange = (event) => {
     const { name } = event.target;
     if (name === "email") setEmailError(false);
     if (name === "password") setPasswordError(false);
-    setErrorMessage("");
   };
 
   return (
@@ -112,7 +81,7 @@ const LoginPage = () => {
             name="email"
             fullWidth
             error={emailError}
-            helperText={emailError && "Please enter a valid email address"}
+            helperText={emailError && "Email is required"}
             sx={{ mb: 3 }}
             onChange={handleInputChange}
           />
@@ -134,12 +103,6 @@ const LoginPage = () => {
             </IconButton>
           </Box>
 
-          {errorMessage && (
-            <Typography variant="body2" color="error" mb={2}>
-              {errorMessage}
-            </Typography>
-          )}
-
           <Box
             sx={{
               display: "flex",
@@ -152,12 +115,9 @@ const LoginPage = () => {
               <input type="checkbox" style={{ marginRight: "8px" }} />
               Remember me
             </label>
-            <Link
-              to="/forgot-password"
-              style={{ textDecoration: "none", color: "#7b61ff" }}
-            >
+            <a href="#" style={{ textDecoration: "none", color: "#7b61ff" }}>
               Forgot password?
-            </Link>
+            </a>
           </Box>
 
           <Button
@@ -176,6 +136,19 @@ const LoginPage = () => {
             ) : (
               "Login"
             )}
+          </Button>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              color: "#7b61ff",
+              borderColor: "#7b61ff",
+              mb: 3,
+              "&:hover": { borderColor: "#6b52e2", color: "#6b52e2" },
+            }}
+          >
+            Login as Guest
           </Button>
         </form>
 

@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -25,10 +26,7 @@ app.use(express.json()); // Middleware for parsing JSON requests
 app.use(express.urlencoded({ extended: true })); // Middleware for parsing URL-encoded requests
 
 // Routes
-app.use("/api/signup", signupRoutes);
-app.use("/api/food-manager", foodManagerRoutes);
-app.use("/api/inner-pantry", innerPantryRoutes);
-app.use("/api/delivery-personnel", deliveryPersonnelRoutes);
+app.use("/api/signup", signupRoutes); // Make sure this matches your route file
 
 // Connect to MongoDB
 mongoose
