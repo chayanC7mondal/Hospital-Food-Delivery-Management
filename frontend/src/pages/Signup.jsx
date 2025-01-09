@@ -73,9 +73,9 @@ const Signup = () => {
       if (response.status === 201) {
         const { role } = formData;
         const routes = {
-          FoodManager: "/AdminDashboard",
-          InnerPantryStaff: "/PantryDashboard",
-          DeliveryPersonnel: "/DeliveryDashboard",
+          FoodManager: "/AdminDashboard/AdminHomepage",
+          InnerPantryStaff: "/PantryDashboard/PantryHome",
+          DeliveryPersonnel: "/DeliveryDashboard/DeliveryHome",
         };
         navigate(routes[role] || "/dashboard");
       }
