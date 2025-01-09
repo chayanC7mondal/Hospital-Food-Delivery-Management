@@ -53,7 +53,6 @@ const Signup = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
@@ -72,7 +71,21 @@ const Signup = () => {
       );
 
       if (response.status === 201) {
-        navigate("/dashboard"); // Navigate to the dashboard or wherever you want after successful signup
+        // Navigate to the appropriate dashboard based on the role
+        const { role } = formData;
+        switch (role) {
+          case "FoodManager":
+            navigate("/AdminDashboard");
+            break;
+          case "InnerPantryStaff":
+            navigate("/PantryDashboard");
+            break;
+          case "DeliveryPersonnel":
+            navigate("/DeliveryDashboard");
+            break;
+          default:
+            navigate("/dashboard"); // Default fallback if no role is matched
+        }
       }
     } catch (error) {
       const message =
