@@ -1,0 +1,69 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+jspm_packages/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Production build
+dist/
+build/
+
+# Vite and related cache files
+.vite/
+.vite-cache/
+
+# Next.js
+.next/
+
+# Tailwind CSS output
+*.css.map
+
+# Local IDE config
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Prettier
+.prettierignore
+
+# ESLint
+.eslintcache
+
+# Coverage directories
+coverage/
+
+# Static files
+/public/static/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# Other
+*.bak
+*.orig
