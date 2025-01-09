@@ -1,10 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const foodManagerRoutes = require("./routes/foodManager.routes");
-const innerPantryRoutes = require("./routes/innerPantry.routes");
-const deliveryPersonnelRoutes = require("./routes/deliveryPersonnel.routes");
+const cors = require("cors"); // Import the cors package
+
+const foodManagerRoutes = require("./routes/manager.routes");
+const innerPantryRoutes = require("./routes/pantry.routes");
+const deliveryPersonnelRoutes = require("./routes/deliveryper.routes");
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
+
 app.use(express.json()); // Middleware for parsing JSON requests
 
 // Use the routes for each role

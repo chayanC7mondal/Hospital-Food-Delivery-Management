@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const InnerPantry = require("../models/innerPantry.model");
+const InnerPantry = require("../models/pantry.models");
 const { validationResult } = require("express-validator");
 
 const signupInnerPantry = async (req, res) => {

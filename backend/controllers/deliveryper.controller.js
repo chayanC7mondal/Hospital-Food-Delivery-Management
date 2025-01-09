@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const DeliveryPersonnel = require("../models/deliveryPersonnel.model");
+const DeliveryPersonnel = require("../models/deliveryper.models");
 const { validationResult } = require("express-validator");
 
 const signupDeliveryPersonnel = async (req, res) => {

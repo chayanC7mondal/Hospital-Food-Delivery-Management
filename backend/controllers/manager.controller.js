@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const FoodManager = require("../models/foodManager.model");
+const FoodManager = require("../models/manager.models");
 const { validationResult } = require("express-validator");
 
 const signupFoodManager = async (req, res) => {

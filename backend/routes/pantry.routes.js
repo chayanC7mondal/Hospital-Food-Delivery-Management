@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { signupInnerPantry } = require("../controllers/innerPantry.controller");
+const { signupInnerPantry } = require("../controllers/pantry.controller");
 
 router.post("/signup", signupInnerPantry);
 
