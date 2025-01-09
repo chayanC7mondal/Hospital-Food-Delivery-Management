@@ -1,32 +1,41 @@
-// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
-const signupRoutes = require("./routes/signup.routes");
-const foodManagerRoutes = require("./routes/manager.routes");
-const innerPantryRoutes = require("./routes/pantry.routes");
-const deliveryPersonnelRoutes = require("./routes/deliveryper.routes");
+const User = require("./models/User");
 
 const app = express();
 
-// CORS Configuration - Ensure this is placed before routes
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Allow requests from the frontend
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true, // If using cookies/sessions
-  })
-);
+// Middleware
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(express.json());
 
-// Body Parsing Middleware
-app.use(express.json()); // Middleware for parsing JSON requests
-app.use(express.urlencoded({ extended: true })); // Middleware for parsing URL-encoded requests
+// Signup Route
+app.post("/api/signup", async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-// Routes
-app.use("/api/signup", signupRoutes); // Make sure this matches your route file
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({ name, email, password: hashedPassword, role });
+    await newUser.save();
+
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    console.error("Signup Error:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
 
 // Connect to MongoDB
 mongoose
@@ -35,13 +44,8 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1); // Exit if connection fails
-  });
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// Start the server
+// Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

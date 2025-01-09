@@ -11,18 +11,18 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import axios from "axios"; // Make sure axios is installed
 
 const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = location.state?.role || "User"; // Default to "User" if no role is passed
-
   const [toggle, setToggle] = useState(false); // For showing/hiding password
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // To display server error message
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email?.value;
     const password = event.target.password?.value;
@@ -34,10 +34,16 @@ const LoginPage = () => {
       return;
     }
 
-    // Simulate loader and redirect to role-specific dashboard
     setLoader(true);
-    setTimeout(() => {
-      setLoader(false); // Hide the loader after 2 seconds
+    try {
+      // Make API request to login
+      const response = await axios.post("http://localhost:5000/api/login", {
+        email,
+        password,
+      });
+
+      // Assuming the response contains the user's role after successful login
+      const { role } = response.data; // Make sure to adjust this based on your response structure
 
       // Redirect based on role
       if (role === "Food Manager") navigate("/AdminDashboard/AdminHomepage");
@@ -45,7 +51,13 @@ const LoginPage = () => {
       else if (role === "Delivery Personnel")
         navigate("/DeliveryDashboard/DeliveryHome");
       else navigate("/"); // Fallback
-    }, 2000);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      setErrorMessage(message);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleInputChange = (event) => {
@@ -69,11 +81,17 @@ const LoginPage = () => {
         }}
       >
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          {role} Login
+          Login
         </Typography>
         <Typography variant="body1" mb={4}>
           Welcome back! Please enter your details to access your dashboard.
         </Typography>
+
+        {errorMessage && (
+          <Typography color="error" variant="body2" mb={2}>
+            {errorMessage}
+          </Typography>
+        )}
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField

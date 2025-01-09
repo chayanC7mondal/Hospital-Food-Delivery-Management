@@ -45,9 +45,9 @@ const Signup = () => {
     const { name, email, password, confirmPassword, role } = formData;
     const newErrors = {};
 
-    if (!name) newErrors.name = "Name is required";
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!email.trim()) newErrors.email = "Email is required";
+    if (!password.trim()) newErrors.password = "Password is required";
     if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     if (!role) newErrors.role = "Role selection is required";
@@ -55,37 +55,45 @@ const Signup = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validate form inputs
     if (!validateForm()) return;
 
-    setLoader(true);
+    setLoader(true); // Start loader
 
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      });
+      // Send user details to the backend
+      const response = await axios.post(
+        "http://localhost:5000/api/signup",
+        formData
+      );
 
       if (response.status === 201) {
+        // User successfully saved to database
         const { role } = formData;
+
+        // Define routes for each role
         const routes = {
           FoodManager: "/AdminDashboard/AdminHomepage",
           InnerPantryStaff: "/PantryDashboard/PantryHome",
           DeliveryPersonnel: "/DeliveryDashboard/DeliveryHome",
         };
+
+        // Redirect to the appropriate dashboard
         navigate(routes[role] || "/dashboard");
+      } else {
+        setErrorMessage("Unexpected response from the server.");
       }
     } catch (error) {
+      // Handle errors
       const message =
         error.response?.data?.message ||
-        "An unexpected error occurred. Please try again.";
+        "An error occurred. Please try again later.";
       setErrorMessage(message);
     } finally {
-      setLoader(false);
+      setLoader(false); // Stop loader
     }
   };
 
