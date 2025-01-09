@@ -1,15 +1,18 @@
-const express = require("express");
 const bcrypt = require("bcrypt");
 const PantryStaff = require("../models/pantry.models");
-
-const router = express.Router();
+const { validationResult } = require("express-validator");
 
 // Signup Route
-router.post("/signup", async (req, res) => {
+const signupPantryStaff = async (req, res) => {
+  const errors = validationResult(req); // Get validation errors
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() }); // Return validation errors if any
+  }
+
   const { name, email, password } = req.body;
 
   try {
-    // Check if the email is already registered
+    // Check if the pantry staff already exists
     const existingUser = await PantryStaff.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "Email already registered" });
@@ -29,12 +32,13 @@ router.post("/signup", async (req, res) => {
     await newPantryStaff.save();
     res.status(201).json({ message: "Pantry staff registered successfully!" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error registering pantry staff" });
   }
-});
+};
 
 // Login Route
-router.post("/login", async (req, res) => {
+const loginPantryStaff = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -59,8 +63,9 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error logging in" });
   }
-});
+};
 
-module.exports = router;
+module.exports = { signupPantryStaff, loginPantryStaff };
