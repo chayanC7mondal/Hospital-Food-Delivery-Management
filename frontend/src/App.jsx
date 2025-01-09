@@ -9,6 +9,8 @@ import PatientPage from "./pages/manager/patients/PatientHome"; // Nested compon
 import DietChartPage from "./pages/manager/dietcharts/DietChart"; // Nested component
 import PantryDashboard from "./pages/pantry/PantryDashboard"; // Pantry layout
 import PantryHomePage from "./pages/pantry/PantryHome"; // Nested component
+import DeliveryDashboard from "./pages/delivery/DeliveryDashboard";
+import DeliveryHomePage from "./pages/delivery/DeliveryHome";
 
 const App = () => {
   return (
@@ -26,7 +28,10 @@ const App = () => {
           <Route path="DietChartPage" element={<DietChartPage />} />
         </Route>
         <Route path="/PantryDashboard" element={<PantryDashboard />}>
-          <Route path="PantryHomePage" element={<PantryHomePage />} />
+          <Route path="PantryHome" element={<PantryHomePage />} />
+        </Route>
+        <Route path="/DeliveryDashboard" element={<DeliveryDashboard />}>
+          <Route path="DeliveryHome" element={<DeliveryHomePage />} />
         </Route>
       </Routes>
     </Router>

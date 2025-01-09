@@ -31,64 +31,33 @@ const Sidebar = () => {
             margin: 0,
           }}
         >
-          Food Manager
+          Delivery Personnel
         </h2>
       </div>
 
       {/* Sidebar Menu */}
       <List>
-        <ListItem button component={Link} to="./AdminHomePage">
+        <ListItem button component={Link} to="#">
           <ListItemIcon>
             <HomeIcon style={{ color: "#fff" }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" style={{ color: "#fff" }} />
         </ListItem>
-        <ListItem button component={Link} to="./PatientHome">
-          <ListItemIcon>
-            <PersonIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText primary="Manage Patients" style={{ color: "#fff" }} />
-        </ListItem>
+
         <ListItem button component={Link} to="./DietChartPage">
           <ListItemIcon>
             <RestaurantMenuIcon style={{ color: "#fff" }} />
           </ListItemIcon>
-          <ListItemText primary="Diet Charts" style={{ color: "#fff" }} />
+          <ListItemText primary="Assigned Meals" style={{ color: "#fff" }} />
         </ListItem>
-        <ListItem button component={Link} to="./PantryTasks">
-          <ListItemIcon>
-            <TaskIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Food Preparation Tasks"
-            style={{ color: "#fff" }}
-          />
-        </ListItem>
-        <ListItem button component={Link} to="./DeliveryPersonnel">
-          <ListItemIcon>
-            <GroupIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Delivery Personnel"
-            style={{ color: "#fff" }}
-          />
-        </ListItem>
-        <ListItem button component={Link} to="./TrackMeals">
-          <ListItemIcon>
-            <LocalShippingIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Track Meal Deliveries"
-            style={{ color: "#fff" }}
-          />
-        </ListItem>
+
         {/* New section for Delivery Personnel */}
         <ListItem button component={Link} to="./Deliveries">
           <ListItemIcon>
             <LocalShippingIcon style={{ color: "#fff" }} />
           </ListItemIcon>
           <ListItemText
-            primary="Mark Deliveries as Completed"
+            primary="Completed Deliveries"
             style={{ color: "#fff" }}
           />
         </ListItem>

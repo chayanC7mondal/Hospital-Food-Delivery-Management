@@ -32,30 +32,19 @@ const Sidebar = () => {
             margin: 0,
           }}
         >
-          Food Manager
+          Inner Pantry
         </h2>
       </div>
 
       {/* Sidebar Menu */}
       <List>
-        <ListItem button component={Link} to="./AdminHomePage">
+        <ListItem button component={Link} to="#">
           <ListItemIcon>
             <HomeIcon style={{ color: "#fff" }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" style={{ color: "#fff" }} />
         </ListItem>
-        <ListItem button component={Link} to="./PatientHome">
-          <ListItemIcon>
-            <PersonIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText primary="Manage Patients" style={{ color: "#fff" }} />
-        </ListItem>
-        <ListItem button component={Link} to="./DietChartPage">
-          <ListItemIcon>
-            <RestaurantMenuIcon style={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText primary="Diet Charts" style={{ color: "#fff" }} />
-        </ListItem>
+
         <ListItem button component={Link} to="./PantryTasks">
           <ListItemIcon>
             <TaskIcon style={{ color: "#fff" }} />

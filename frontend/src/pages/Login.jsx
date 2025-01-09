@@ -11,12 +11,6 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import AdminHomePage from "./manager/AdminHomepage";
-import AdminDashboard from "./manager/AdminDashboard";
-import PantryDashboard from "./pantry/PantryDashboard";
-import PantryHomePage from "./pantry/PantryHome";
-import DeliveryDashboard from "./delivery/DeliveryDashboard";
-import DeliveryHome from "./delivery/DeliveryHome";
 
 const LoginPage = () => {
   const location = useLocation();
@@ -40,11 +34,17 @@ const LoginPage = () => {
       return;
     }
 
-    // Simulate loader and redirect to AdminHomePage
+    // Simulate loader and redirect to role-specific dashboard
     setLoader(true);
     setTimeout(() => {
       setLoader(false); // Hide the loader after 2 seconds
-      navigate("/AdminDashboard/AdminHomepage"); // Navigate to AdminHomePage
+
+      // Redirect based on role
+      if (role === "Food Manager") navigate("/AdminDashboard/AdminHomepage");
+      else if (role === "Inner Pantry") navigate("/PantryDashboard/PantryHome");
+      else if (role === "Delivery Personnel")
+        navigate("/DeliveryDashboard/DeliveryHome");
+      else navigate("/"); // Fallback
     }, 2000);
   };
 
