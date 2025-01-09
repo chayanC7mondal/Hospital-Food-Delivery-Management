@@ -33,21 +33,21 @@ const ChooseRole = ({ visitor }) => {
         if (visitor === "guest") {
           fields = { email: "foodmanager@chamchum.com", password };
         } else {
-          navigate("/LoginPage");
+          navigate("/LoginPage", { state: { role } }); // Pass role to the login page
           return;
         }
       } else if (role === "Inner Pantry") {
         if (visitor === "guest") {
           fields = { pantryCode: "1234", password };
         } else {
-          navigate("/InnerPantryLogin");
+          navigate("/LoginPage", { state: { role } }); // Pass role to the login page
           return;
         }
       } else if (role === "Delivery Personnel") {
         if (visitor === "guest") {
           fields = { email: "delivery@chamchum.com", password };
         } else {
-          navigate("/DeliveryPersonnelLogin");
+          navigate("/LoginPage", { state: { role } }); // Pass role to the login page
           return;
         }
       }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   CircularProgress,
@@ -10,28 +10,45 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Link } from "react-router-dom";
 
-const LoginPage = () => {
-  const location = useLocation();
+const Signup = () => {
   const navigate = useNavigate();
-  const role = location.state?.role || "User"; // Default to "User" if no role is passed
 
-  const [toggle, setToggle] = useState(false); // For showing/hiding password
+  const [togglePassword, setTogglePassword] = useState(false);
+  const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const name = event.target.name?.value;
     const email = event.target.email?.value;
     const password = event.target.password?.value;
+    const confirmPassword = event.target.confirmPassword?.value;
 
-    if (!email || !password) {
-      if (!email) setEmailError(true);
-      if (!password) setPasswordError(true);
-      return;
+    let hasError = false;
+
+    if (!name) {
+      setNameError(true);
+      hasError = true;
     }
+    if (!email) {
+      setEmailError(true);
+      hasError = true;
+    }
+    if (!password) {
+      setPasswordError(true);
+      hasError = true;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      hasError = true;
+    }
+
+    if (hasError) return;
 
     setLoader(true);
     setTimeout(() => {
@@ -42,13 +59,15 @@ const LoginPage = () => {
 
   const handleInputChange = (event) => {
     const { name } = event.target;
+    if (name === "name") setNameError(false);
     if (name === "email") setEmailError(false);
     if (name === "password") setPasswordError(false);
+    if (name === "confirmPassword") setConfirmPasswordError(false);
   };
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      {/* Left Side - Login Form */}
+      {/* Left Side - Signup Form */}
       <Box
         sx={{
           flex: 1,
@@ -61,13 +80,22 @@ const LoginPage = () => {
         }}
       >
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          {role} Login
+          Signup
         </Typography>
         <Typography variant="body1" mb={4}>
-          Welcome back! Please enter your details to access your dashboard.
+          Create an account to get started with your dashboard.
         </Typography>
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <TextField
+            label="Name"
+            name="name"
+            fullWidth
+            error={nameError}
+            helperText={nameError && "Name is required"}
+            sx={{ mb: 3 }}
+            onChange={handleInputChange}
+          />
           <TextField
             label="Email"
             name="email"
@@ -81,35 +109,38 @@ const LoginPage = () => {
             <TextField
               label="Password"
               name="password"
-              type={toggle ? "text" : "password"}
+              type={togglePassword ? "text" : "password"}
               fullWidth
               error={passwordError}
               helperText={passwordError && "Password is required"}
               onChange={handleInputChange}
             />
             <IconButton
-              onClick={() => setToggle((prev) => !prev)}
+              onClick={() => setTogglePassword((prev) => !prev)}
               sx={{ position: "absolute", right: 10, top: 10 }}
             >
-              {toggle ? <VisibilityOff /> : <Visibility />}
+              {togglePassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <label>
-              <input type="checkbox" style={{ marginRight: "8px" }} />
-              Remember me
-            </label>
-            <a href="#" style={{ textDecoration: "none", color: "#7b61ff" }}>
-              Forgot password?
-            </a>
+          <Box sx={{ position: "relative", mb: 3 }}>
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              type={toggleConfirmPassword ? "text" : "password"}
+              fullWidth
+              error={confirmPasswordError}
+              helperText={
+                confirmPasswordError &&
+                "Passwords do not match or field is empty"
+              }
+              onChange={handleInputChange}
+            />
+            <IconButton
+              onClick={() => setToggleConfirmPassword((prev) => !prev)}
+              sx={{ position: "absolute", right: 10, top: 10 }}
+            >
+              {toggleConfirmPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
           </Box>
 
           <Button
@@ -126,37 +157,24 @@ const LoginPage = () => {
             {loader ? (
               <CircularProgress size={24} sx={{ color: "#fff" }} />
             ) : (
-              "Login"
+              "Signup"
             )}
           </Button>
 
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{
-              color: "#7b61ff",
-              borderColor: "#7b61ff",
-              mb: 3,
-              "&:hover": { borderColor: "#6b52e2", color: "#6b52e2" },
-            }}
-          >
-            Login as Guest
-          </Button>
+          <Typography variant="body2">
+            Already have an account?{" "}
+            <a
+              href="/LoginPage"
+              style={{
+                textDecoration: "none",
+                color: "#7b61ff",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </a>
+          </Typography>
         </form>
-
-        <Typography variant="body2">
-          Don’t have an account?{" "}
-          <Link
-            to="/Signup"
-            style={{
-              textDecoration: "none",
-              color: "#7b61ff",
-              fontWeight: "bold",
-            }}
-          >
-            Sign up
-          </Link>
-        </Typography>
       </Box>
 
       {/* Right Side - Decorative Element */}
@@ -191,4 +209,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Signup;

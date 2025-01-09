@@ -50,7 +50,10 @@ const HomePage = () => {
 
           <p className="text-center">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-[#550080]">
+            <Link
+              to="/Signup"
+              className="text-[#550080] hover:text-[#7f56da] transition-all"
+            >
               Sign up
             </Link>
           </p>
