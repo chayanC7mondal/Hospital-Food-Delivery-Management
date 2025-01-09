@@ -55,14 +55,17 @@ const Signup = () => {
     setLoader(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/delivery/signup",
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
       if (response.status === 201) {
-        navigate("/dashboard");
+        navigate("/dashboard"); // Navigate to the dashboard or wherever you want after successful signup
       }
     } catch (error) {
       const message =
