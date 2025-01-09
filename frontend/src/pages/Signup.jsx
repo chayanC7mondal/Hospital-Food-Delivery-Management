@@ -8,6 +8,10 @@ import {
   Typography,
   Backdrop,
   IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
@@ -20,6 +24,7 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "", // New field for role selection
   });
   const [errors, setErrors] = useState({});
   const [togglePassword, setTogglePassword] = useState(false);
@@ -35,7 +40,7 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    const { name, email, password, confirmPassword } = formData;
+    const { name, email, password, confirmPassword, role } = formData;
     const newErrors = {};
 
     if (!name) newErrors.name = "Name is required";
@@ -43,6 +48,7 @@ const Signup = () => {
     if (!password) newErrors.password = "Password is required";
     if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
+    if (!role) newErrors.role = "Role selection is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -56,11 +62,12 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/delivery/signup",
+        "http://localhost:5000/api/signup", // Adjusted endpoint for signup with role
         {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          role: formData.role,
         }
       );
 
@@ -161,6 +168,28 @@ const Signup = () => {
               {toggleConfirmPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </Box>
+
+          {/* Role Selection */}
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select
+              labelId="role-label"
+              label="Role"
+              name="role"
+              value={formData.role}
+              error={!!errors.role}
+              onChange={handleChange}
+            >
+              <MenuItem value="FoodManager">Food Manager</MenuItem>
+              <MenuItem value="InnerPantryStaff">Inner Pantry Staff</MenuItem>
+              <MenuItem value="DeliveryPersonnel">Delivery Personnel</MenuItem>
+            </Select>
+            {errors.role && (
+              <Typography color="error" variant="body2">
+                {errors.role}
+              </Typography>
+            )}
+          </FormControl>
 
           <Button
             type="submit"

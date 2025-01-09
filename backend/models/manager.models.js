@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 
-const managerSchema = new mongoose.Schema({
+const foodManagerSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, default: "Food Manager" },
 });
 
-module.exports = mongoose.model("Manager", managerSchema);
+const FoodManager = mongoose.model("FoodManager", foodManagerSchema);
+
+module.exports = FoodManager;

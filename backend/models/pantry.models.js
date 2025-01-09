@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 
-const pantryStaffSchema = new mongoose.Schema({
+const innerPantrySchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, default: "Inner Pantry" },
 });
 
-module.exports = mongoose.model("PantryStaff", pantryStaffSchema);
+const InnerPantry = mongoose.model("InnerPantry", innerPantrySchema);
+
+module.exports = InnerPantry;
