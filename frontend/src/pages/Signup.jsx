@@ -24,11 +24,13 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "", // New field for role selection
+    role: "",
   });
   const [errors, setErrors] = useState({});
-  const [togglePassword, setTogglePassword] = useState(false);
-  const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    password: false,
+    confirmPassword: false,
+  });
   const [loader, setLoader] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -53,6 +55,7 @@ const Signup = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
@@ -60,32 +63,21 @@ const Signup = () => {
     setLoader(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/signup", // Adjusted endpoint for signup with role
-        {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-        }
-      );
+      const response = await axios.post("http://localhost:5000/api/signup", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      });
 
       if (response.status === 201) {
-        // Navigate to the appropriate dashboard based on the role
         const { role } = formData;
-        switch (role) {
-          case "FoodManager":
-            navigate("/AdminDashboard");
-            break;
-          case "InnerPantryStaff":
-            navigate("/PantryDashboard");
-            break;
-          case "DeliveryPersonnel":
-            navigate("/DeliveryDashboard");
-            break;
-          default:
-            navigate("/dashboard"); // Default fallback if no role is matched
-        }
+        const routes = {
+          FoodManager: "/AdminDashboard",
+          InnerPantryStaff: "/PantryDashboard",
+          DeliveryPersonnel: "/DeliveryDashboard",
+        };
+        navigate(routes[role] || "/dashboard");
       }
     } catch (error) {
       const message =
@@ -149,7 +141,7 @@ const Signup = () => {
             <TextField
               label="Password"
               name="password"
-              type={togglePassword ? "text" : "password"}
+              type={passwordVisibility.password ? "text" : "password"}
               value={formData.password}
               fullWidth
               error={!!errors.password}
@@ -157,17 +149,22 @@ const Signup = () => {
               onChange={handleChange}
             />
             <IconButton
-              onClick={() => setTogglePassword((prev) => !prev)}
+              onClick={() =>
+                setPasswordVisibility((prev) => ({
+                  ...prev,
+                  password: !prev.password,
+                }))
+              }
               sx={{ position: "absolute", right: 10, top: 10 }}
             >
-              {togglePassword ? <VisibilityOff /> : <Visibility />}
+              {passwordVisibility.password ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </Box>
           <Box sx={{ position: "relative", mb: 3 }}>
             <TextField
               label="Confirm Password"
               name="confirmPassword"
-              type={toggleConfirmPassword ? "text" : "password"}
+              type={passwordVisibility.confirmPassword ? "text" : "password"}
               value={formData.confirmPassword}
               fullWidth
               error={!!errors.confirmPassword}
@@ -175,22 +172,30 @@ const Signup = () => {
               onChange={handleChange}
             />
             <IconButton
-              onClick={() => setToggleConfirmPassword((prev) => !prev)}
+              onClick={() =>
+                setPasswordVisibility((prev) => ({
+                  ...prev,
+                  confirmPassword: !prev.confirmPassword,
+                }))
+              }
               sx={{ position: "absolute", right: 10, top: 10 }}
             >
-              {toggleConfirmPassword ? <VisibilityOff /> : <Visibility />}
+              {passwordVisibility.confirmPassword ? (
+                <VisibilityOff />
+              ) : (
+                <Visibility />
+              )}
             </IconButton>
           </Box>
 
           {/* Role Selection */}
-          <FormControl fullWidth sx={{ mb: 3 }}>
+          <FormControl fullWidth sx={{ mb: 3 }} error={!!errors.role}>
             <InputLabel id="role-label">Role</InputLabel>
             <Select
               labelId="role-label"
               label="Role"
               name="role"
               value={formData.role}
-              error={!!errors.role}
               onChange={handleChange}
             >
               <MenuItem value="FoodManager">Food Manager</MenuItem>
