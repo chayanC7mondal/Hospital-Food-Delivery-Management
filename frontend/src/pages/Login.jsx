@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import AdminHomePage from "./manager/AdminHomepage";
+import AdminDashboard from "./manager/AdminDashboard";
 
 const LoginPage = () => {
   const location = useLocation();
@@ -27,16 +29,18 @@ const LoginPage = () => {
     const email = event.target.email?.value;
     const password = event.target.password?.value;
 
+    // Validate input
     if (!email || !password) {
       if (!email) setEmailError(true);
       if (!password) setPasswordError(true);
       return;
     }
 
+    // Simulate loader and redirect to AdminHomePage
     setLoader(true);
     setTimeout(() => {
-      navigate("/dashboard"); // Simulated navigation to dashboard
-      setLoader(false);
+      setLoader(false); // Hide the loader after 2 seconds
+      navigate("/AdminDashboard/AdminHomepage"); // Navigate to AdminHomePage
     }, 2000);
   };
 
