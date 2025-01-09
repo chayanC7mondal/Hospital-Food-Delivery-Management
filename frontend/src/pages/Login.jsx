@@ -13,6 +13,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import AdminHomePage from "./manager/AdminHomepage";
 import AdminDashboard from "./manager/AdminDashboard";
+import PantryDashboard from "./pantry/PantryDashboard";
+import PantryHomePage from "./pantry/PantryHome";
 
 const LoginPage = () => {
   const location = useLocation();

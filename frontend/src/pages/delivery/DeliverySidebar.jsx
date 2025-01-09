@@ -3,10 +3,9 @@ import { List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import TaskIcon from "@mui/icons-material/Task"; // For managing tasks
 import GroupIcon from "@mui/icons-material/Group"; // For managing delivery personnel
+import LocalShippingIcon from "@mui/icons-material/LocalShipping"; // For tracking deliveries
 
 const Sidebar = () => {
   return (
@@ -80,6 +79,16 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText
             primary="Track Meal Deliveries"
+            style={{ color: "#fff" }}
+          />
+        </ListItem>
+        {/* New section for Delivery Personnel */}
+        <ListItem button component={Link} to="./Deliveries">
+          <ListItemIcon>
+            <LocalShippingIcon style={{ color: "#fff" }} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Mark Deliveries as Completed"
             style={{ color: "#fff" }}
           />
         </ListItem>

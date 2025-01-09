@@ -1,8 +1,7 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./AdminSidebar";
+import Sidebar from "./PantrySidebar";
 
-const AdminDashboard = () => {
+const PantryDashboard = () => {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Sidebar */}
@@ -23,4 +22,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default PantryDashboard;

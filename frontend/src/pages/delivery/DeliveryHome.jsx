@@ -1,20 +1,32 @@
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 
-const PantryHome = () => {
+const DeliveryHome = () => {
   return (
     <Box sx={{ flexGrow: 1, padding: "20px" }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Pantry Management Dashboard
+        Delivery Personnel Dashboard
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ height: "100%" }}>
             <CardContent>
               <Typography variant="h6" fontWeight="bold">
-                Total Meals Prepared
+                Total Meals Assigned
               </Typography>
               <Typography variant="h4" color="green">
-                120 {/* Replace with dynamic data */}
+                100 {/* Replace with dynamic data */}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ height: "100%" }}>
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold">
+                Meals Delivered
+              </Typography>
+              <Typography variant="h4" color="green">
+                80 {/* Replace with dynamic data */}
               </Typography>
             </CardContent>
           </Card>
@@ -35,22 +47,10 @@ const PantryHome = () => {
           <Card sx={{ height: "100%" }}>
             <CardContent>
               <Typography variant="h6" fontWeight="bold">
-                Total Delivery Personnel
+                Pending Deliveries Updates
               </Typography>
               <Typography variant="h4" color="green">
                 5 {/* Replace with dynamic data */}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent>
-              <Typography variant="h6" fontWeight="bold">
-                Total Food Preparation Tasks
-              </Typography>
-              <Typography variant="h4" color="green">
-                30 {/* Replace with dynamic data */}
               </Typography>
             </CardContent>
           </Card>
@@ -60,4 +60,4 @@ const PantryHome = () => {
   );
 };
 
-export default PantryHome;
+export default DeliveryHome;
