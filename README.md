@@ -12,5 +12,5 @@
 
 Chayan Mondal
 <br>
-Render - server side
+Render - server side /n
 Netlify - client side
