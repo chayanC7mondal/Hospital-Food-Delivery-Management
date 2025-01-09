@@ -10,59 +10,68 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState({});
   const [togglePassword, setTogglePassword] = useState(false);
   const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const name = event.target.name?.value;
-    const email = event.target.email?.value;
-    const password = event.target.password?.value;
-    const confirmPassword = event.target.confirmPassword?.value;
-
-    let hasError = false;
-
-    if (!name) {
-      setNameError(true);
-      hasError = true;
-    }
-    if (!email) {
-      setEmailError(true);
-      hasError = true;
-    }
-    if (!password) {
-      setPasswordError(true);
-      hasError = true;
-    }
-    if (password !== confirmPassword) {
-      setConfirmPasswordError(true);
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    setLoader(true);
-    setTimeout(() => {
-      navigate("/dashboard"); // Simulated navigation to dashboard
-      setLoader(false);
-    }, 2000);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setErrorMessage("");
   };
 
-  const handleInputChange = (event) => {
-    const { name } = event.target;
-    if (name === "name") setNameError(false);
-    if (name === "email") setEmailError(false);
-    if (name === "password") setPasswordError(false);
-    if (name === "confirmPassword") setConfirmPasswordError(false);
+  const validateForm = () => {
+    const { name, email, password, confirmPassword } = formData;
+    const newErrors = {};
+
+    if (!name) newErrors.name = "Name is required";
+    if (!email) newErrors.email = "Email is required";
+    if (!password) newErrors.password = "Password is required";
+    if (password !== confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!validateForm()) return;
+
+    setLoader(true);
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/signup", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.status === 201) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "An unexpected error occurred. Please try again.";
+      setErrorMessage(message);
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
@@ -86,34 +95,43 @@ const Signup = () => {
           Create an account to get started with your dashboard.
         </Typography>
 
+        {errorMessage && (
+          <Typography color="error" variant="body2" mb={2}>
+            {errorMessage}
+          </Typography>
+        )}
+
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField
             label="Name"
             name="name"
+            value={formData.name}
             fullWidth
-            error={nameError}
-            helperText={nameError && "Name is required"}
+            error={!!errors.name}
+            helperText={errors.name}
             sx={{ mb: 3 }}
-            onChange={handleInputChange}
+            onChange={handleChange}
           />
           <TextField
             label="Email"
             name="email"
+            value={formData.email}
             fullWidth
-            error={emailError}
-            helperText={emailError && "Email is required"}
+            error={!!errors.email}
+            helperText={errors.email}
             sx={{ mb: 3 }}
-            onChange={handleInputChange}
+            onChange={handleChange}
           />
           <Box sx={{ position: "relative", mb: 3 }}>
             <TextField
               label="Password"
               name="password"
               type={togglePassword ? "text" : "password"}
+              value={formData.password}
               fullWidth
-              error={passwordError}
-              helperText={passwordError && "Password is required"}
-              onChange={handleInputChange}
+              error={!!errors.password}
+              helperText={errors.password}
+              onChange={handleChange}
             />
             <IconButton
               onClick={() => setTogglePassword((prev) => !prev)}
@@ -127,13 +145,11 @@ const Signup = () => {
               label="Confirm Password"
               name="confirmPassword"
               type={toggleConfirmPassword ? "text" : "password"}
+              value={formData.confirmPassword}
               fullWidth
-              error={confirmPasswordError}
-              helperText={
-                confirmPasswordError &&
-                "Passwords do not match or field is empty"
-              }
-              onChange={handleInputChange}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
+              onChange={handleChange}
             />
             <IconButton
               onClick={() => setToggleConfirmPassword((prev) => !prev)}

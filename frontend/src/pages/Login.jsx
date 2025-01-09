@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   Button,
   CircularProgress,
@@ -10,48 +10,79 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import process from "process";
 
 const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = location.state?.role || "User"; // Default to "User" if no role is passed
+  const role = location.state?.role || "User"; // Default role
 
-  const [toggle, setToggle] = useState(false); // For showing/hiding password
+  const [toggle, setToggle] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const handleSubmit = (event) => {
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email?.value;
     const password = event.target.password?.value;
 
-    // Validate input
-    if (!email || !password) {
-      if (!email) setEmailError(true);
-      if (!password) setPasswordError(true);
-      return;
+    let hasError = false;
+    if (!email || !validateEmail(email)) {
+      setEmailError(true);
+      hasError = true;
+    }
+    if (!password) {
+      setPasswordError(true);
+      hasError = true;
     }
 
-    // Simulate loader and redirect to role-specific dashboard
-    setLoader(true);
-    setTimeout(() => {
-      setLoader(false); // Hide the loader after 2 seconds
+    if (hasError) return;
 
-      // Redirect based on role
-      if (role === "Food Manager") navigate("/AdminDashboard/AdminHomepage");
-      else if (role === "Inner Pantry") navigate("/PantryDashboard/PantryHome");
-      else if (role === "Delivery Personnel")
-        navigate("/DeliveryDashboard/DeliveryHome");
-      else navigate("/"); // Fallback
-    }, 2000);
+    setLoader(true);
+    setErrorMessage("");
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/login`,
+        { email, password }
+      );
+
+      const { role: userRole, token } = response.data;
+      localStorage.setItem("authToken", token);
+
+      switch (userRole) {
+        case "Food Manager":
+          navigate("/AdminDashboard/AdminHomepage");
+          break;
+        case "Inner Pantry":
+          navigate("/PantryDashboard/PantryHome");
+          break;
+        case "Delivery Personnel":
+          navigate("/DeliveryDashboard/DeliveryHome");
+          break;
+        default:
+          navigate("/");
+      }
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleInputChange = (event) => {
     const { name } = event.target;
     if (name === "email") setEmailError(false);
     if (name === "password") setPasswordError(false);
+    setErrorMessage("");
   };
 
   return (
@@ -81,7 +112,7 @@ const LoginPage = () => {
             name="email"
             fullWidth
             error={emailError}
-            helperText={emailError && "Email is required"}
+            helperText={emailError && "Please enter a valid email address"}
             sx={{ mb: 3 }}
             onChange={handleInputChange}
           />
@@ -103,6 +134,12 @@ const LoginPage = () => {
             </IconButton>
           </Box>
 
+          {errorMessage && (
+            <Typography variant="body2" color="error" mb={2}>
+              {errorMessage}
+            </Typography>
+          )}
+
           <Box
             sx={{
               display: "flex",
@@ -115,9 +152,12 @@ const LoginPage = () => {
               <input type="checkbox" style={{ marginRight: "8px" }} />
               Remember me
             </label>
-            <a href="#" style={{ textDecoration: "none", color: "#7b61ff" }}>
+            <Link
+              to="/forgot-password"
+              style={{ textDecoration: "none", color: "#7b61ff" }}
+            >
               Forgot password?
-            </a>
+            </Link>
           </Box>
 
           <Button
@@ -136,19 +176,6 @@ const LoginPage = () => {
             ) : (
               "Login"
             )}
-          </Button>
-
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{
-              color: "#7b61ff",
-              borderColor: "#7b61ff",
-              mb: 3,
-              "&:hover": { borderColor: "#6b52e2", color: "#6b52e2" },
-            }}
-          >
-            Login as Guest
           </Button>
         </form>
 
