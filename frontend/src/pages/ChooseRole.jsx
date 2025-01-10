@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Popup from "../components/Popup";
+
 import ShootingStarsBackground from "../components/ShootingStarsBackground"; // Import the shooting star background
 
 const ChooseRole = ({ visitor }) => {
