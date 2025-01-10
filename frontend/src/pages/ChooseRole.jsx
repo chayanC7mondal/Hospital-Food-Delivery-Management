@@ -136,12 +136,6 @@ const ChooseRole = ({ visitor }) => {
             </div>
           </div>
         )}
-
-        <Popup
-          message={message}
-          setShowPopup={setShowPopup}
-          showPopup={showPopup}
-        />
       </div>
     </div>
   );

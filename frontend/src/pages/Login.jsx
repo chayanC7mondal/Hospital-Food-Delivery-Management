@@ -6,28 +6,42 @@ import {
   TextField,
   Box,
   Typography,
-  Backdrop,
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import axios from "axios"; // Make sure axios is installed
 
 const LoginPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [toggle, setToggle] = useState(false); // For showing/hiding password
+  const location = useLocation();
+  const role = location.state?.role || "User"; // Default to "User" if no role is passed
+
+  const [toggle, setToggle] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // To display server error message
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (event) => {
+  const userDatabase = {
+    "hospital_manager@xyz.com": {
+      password: "Password@2025",
+      role: "Food Manager",
+    },
+    "hospital_pantry@xyz.com": {
+      password: "Password@2025",
+      role: "Inner Pantry",
+    },
+    "hospital_delivery@xyz.com": {
+      password: "Password@2025",
+      role: "Delivery Personnel",
+    },
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     const email = event.target.email?.value;
     const password = event.target.password?.value;
 
-    // Validate input
     if (!email || !password) {
       if (!email) setEmailError(true);
       if (!password) setPasswordError(true);
@@ -35,29 +49,22 @@ const LoginPage = () => {
     }
 
     setLoader(true);
-    try {
-      // Make API request to login
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email,
-        password,
-      });
 
-      // Assuming the response contains the user's role after successful login
-      const { role } = response.data; // Make sure to adjust this based on your response structure
+    setTimeout(() => {
+      if (userDatabase[email] && userDatabase[email].password === password) {
+        const userRole = userDatabase[email].role;
 
-      // Redirect based on role
-      if (role === "Food Manager") navigate("/AdminDashboard/AdminHomepage");
-      else if (role === "Inner Pantry") navigate("/PantryDashboard/PantryHome");
-      else if (role === "Delivery Personnel")
-        navigate("/DeliveryDashboard/DeliveryHome");
-      else navigate("/"); // Fallback
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Login failed. Please try again.";
-      setErrorMessage(message);
-    } finally {
+        if (userRole === "Food Manager")
+          navigate("/AdminDashboard/AdminHomepage");
+        else if (userRole === "Inner Pantry")
+          navigate("/PantryDashboard/PantryHome");
+        else if (userRole === "Delivery Personnel")
+          navigate("/DeliveryDashboard/DeliveryHome");
+      } else {
+        setErrorMessage("Invalid email or password. Please try again.");
+      }
       setLoader(false);
-    }
+    }, 1000);
   };
 
   const handleInputChange = (event) => {
@@ -68,7 +75,6 @@ const LoginPage = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      {/* Left Side - Login Form */}
       <Box
         sx={{
           flex: 1,
@@ -81,7 +87,7 @@ const LoginPage = () => {
         }}
       >
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          Login
+          {`${role} Login`}
         </Typography>
         <Typography variant="body1" mb={4}>
           Welcome back! Please enter your details to access your dashboard.
@@ -121,23 +127,6 @@ const LoginPage = () => {
             </IconButton>
           </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <label>
-              <input type="checkbox" style={{ marginRight: "8px" }} />
-              Remember me
-            </label>
-            <a href="#" style={{ textDecoration: "none", color: "#7b61ff" }}>
-              Forgot password?
-            </a>
-          </Box>
-
           <Button
             type="submit"
             fullWidth
@@ -154,19 +143,6 @@ const LoginPage = () => {
             ) : (
               "Login"
             )}
-          </Button>
-
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{
-              color: "#7b61ff",
-              borderColor: "#7b61ff",
-              mb: 3,
-              "&:hover": { borderColor: "#6b52e2", color: "#6b52e2" },
-            }}
-          >
-            Login as Guest
           </Button>
         </form>
 
@@ -185,7 +161,6 @@ const LoginPage = () => {
         </Typography>
       </Box>
 
-      {/* Right Side - Decorative Element */}
       <Box
         sx={{
           flex: 1,
@@ -206,13 +181,6 @@ const LoginPage = () => {
           }}
         ></div>
       </Box>
-
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loader}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </div>
   );
 };
